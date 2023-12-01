@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 let amountResult = 0;
-router.post("/relocationSettlement", (req, res) => {
+router.post("/", (req, res) => {
   const amount = req.body.amount;
   const date = req.body.date;
   const share = req.body.share;

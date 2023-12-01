@@ -6,11 +6,23 @@ const router = express.Router();
 const calArr = [];
 let peopleFilterArr = [];
 let ownerFilterArr = [];
-
-router.post("/housingTransferExpenses", async (req, res, next) => {
-  const headCount = req.body.headCount;
+router.get("/", async (req, res) => {
+  try {
+    const API_KEY = process.env.API_KEY + "=";
+    const houseHoldsTotalIncomeAndExpenditureUrl = `https://kosis.kr/openapi/statisticsData.do?method=getList&apiKey=${API_KEY}&format=json&jsonVD=Y&userStatsId=tpg42/101/DT_1L9U027/2/1/20231106103754&prdSe=Y&newEstPrdCnt=1`;
+    const houseRes = await axios.get(houseHoldsTotalIncomeAndExpenditureUrl);
+    calMonth(houseRes.data);
+    console.log("hello");
+    res.json(houseRes.data);
+  } catch (error) {
+    console.error("Error fetching data from the API:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+router.post("/post", async (req, res, next) => {
+  const headCount = Number(req.body.headCount);
   const owner = req.body.owner;
-  const data = { headCount: headCount, owner: owner };
+  const data = { headCount: `${headCount}`, owner: `${owner}` };
   try {
     const API_KEY = process.env.API_KEY + "=";
     const houseHoldsTotalIncomeAndExpenditureUrl = `https://kosis.kr/openapi/statisticsData.do?method=getList&apiKey=${API_KEY}&format=json&jsonVD=Y&userStatsId=tpg42/101/DT_1L9U027/2/1/20231106103754&prdSe=Y&newEstPrdCnt=1`;
@@ -19,6 +31,7 @@ router.post("/housingTransferExpenses", async (req, res, next) => {
     filterPeople(headCount);
     filterOwner(headCount, owner);
     data.result = ownerFilterArr[0];
+    console.log("hello");
     res.send(data);
   } catch (error) {
     console.error("Error fetching data from the API:", error);

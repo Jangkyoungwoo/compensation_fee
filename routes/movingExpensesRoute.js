@@ -9,7 +9,7 @@ let combinedArray = [];
 let resultArr = [];
 
 //주택 연면적 받아서 결과값 뽑아내기
-router.post("/movingExpenses", async (req, res) => {
+router.post("/", async (req, res) => {
   const { width } = req.body;
   try {
     const updatedPriceOfWage = [];
